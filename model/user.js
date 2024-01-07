@@ -18,10 +18,24 @@ const schema = new Schema({
     password:{
         type:String
     },
+    picture:{
+        type: String
+    },
+    isDeleted:{type:Boolean},
+    createdAt:{type:Date},
+    updatedAt:{type:Date}
 
-})
+},
+{
+    timestamps:{
+        createdAt:'createdAt',
+        updatedAt:'updatedAt'
+    }
+}
+)
 
 schema.pre("save", async function (next){
+    this.isDeleted=false;
     if(this.password){
         this.password = await bcrypt.hash(this.password,8);
     }
