@@ -8,18 +8,53 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     userId:{
         ref: 'user',
-        type: Schema.Types.ObjectId
-    },
-    products:[
-        {
-            productId:{
-                ref:'product',
-                type:Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
+        validate: {
+            validator: async function(value) {
+               const id = await mongoose.model('user').findById(value);
+               return !!id;
             },
-            quantity:{type:Number},
-            cartItemCreatedAt:{type:Date}
+            message: 'user does not exist.'
+         },
+        required: true
+    },
+    title:{
+        type: String
+    },
+    subtitle:{
+        type: String
+    },
+    publisher:{
+        type: String
+    },
+    publishedDate:{
+        type: String
+    },
+    description:{
+        type: String
+    },
+    authors:{
+        type: [String]
+    },
+    pageCount:{
+        type: Number
+    },
+    imageLinks:{
+        smallThumbnail:{
+            type:String
+        },
+        thumbnail:{
+            type:String
         }
-    ],
+    },
+    listPrice:{
+        amount:{
+            type:Number
+        },
+        currencyCode:{
+            type:String
+        }
+    },
     isDeleted:{type:Boolean},
     createdAt:{type:Date},
     updatedAt:{type:Date},
@@ -47,6 +82,6 @@ schema.method('toJSON', function () {
 });
 
 schema.plugin(mongoosePaginate);
-schema.plugin(idValidator);
+// schema.plugin(idValidator);
 const cart = mongoose.model('cart',schema);
 module.exports = cart;

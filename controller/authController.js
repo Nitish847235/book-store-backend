@@ -1,7 +1,7 @@
 
 const User = require('../model/user')
 const jwt = require('jsonwebtoken');
-const { verifyToken } = require('../services/auth');
+const { verifyToken } = require('../firebase/auth');
 
 
 
@@ -70,7 +70,7 @@ const login = async(req,res)=>{
 
         let userData = user.toJSON();
 
-        let token =  jwt.sign({userId:userData.id,email:userData.email},process.env.JWT_SCERET,{expiresIn:10000*60})
+        let token =  jwt.sign({id:userData.id,email:userData.email},process.env.JWT_SCERET,{expiresIn:10000*60})
 
         let result = {...userData,token}
         
